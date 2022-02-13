@@ -1,11 +1,23 @@
-val buyerOutput = {
-    val tokenToIssue = OUTPUTS(0).getOrElse(0, (INPUTS(0).id, 0L))
-    INPUTS(0).id == tokenToIssue._1 && tokenToIssue._2 == 1L && OUTPUTS(0).value == $ergAmountL && OUTPUST(0).propositionBytes == fromBase64("$userAddress")
-}
+val proposedTokenHasSameIdAsFirstTxInput = OUTPUTS(0).tokens(0)._1 == SELF.id
+val proposedTokenIsNonFungible = OUTPUTS(0).tokens(0)._2 == 1
+val proposedTokenIsValidNFT = proposedTokenHasSameIdAsFirstTxInput && proposedTokenIsNonFungible
 
-val returnFunds = {
-    val total = INPUTS(0L, {(x:Long, b:Box) => x + b.value})
-    OUTPUTS(0).value >= total && OUTPUTS(0).propositionBytes] == ("$userAddress")
-}
+val expectedTokenName = INPUTS(0).R4[Coll[Byte]].get
+val proposedTokenName = OUTPUTS(0).R4[Coll[Byte]].get
+val tokenNameIsCorrect = expectedTokenName == proposedTokenName
 
-sigmaProp(buyerOutput || returnFunds)
+val expectedPaymentAmount = INPUTS(0).R5[Long].get
+val sentPaymentAmount = SELF.value
+val paymentAmountIsCorrect = expectedPaymentAmount == sentPaymentAmount
+
+val expectedReceiverAddress = INPUTS(0).R6[Coll[Byte]].get
+val proposedReceiverAddress = OUTPUTS(0).propositionBytes
+val receiverAddressIsCorrect = expectedReceiverAddress == proposedReceiverAddress
+
+val tokenCanBeMinted = proposedTokenIsValidNFT &&
+                       tokenNameIsCorrect &&
+                       paymentAmountIsCorrect &&
+                       receiverAddressIsCorrect &&
+                       ergoNamesPk
+
+sigmaProp(tokenCanBeMinted)

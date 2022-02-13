@@ -1,5 +1,3 @@
 # Ergo Names Contracts
 
-Smart contracts for Ergo Names Dapp
-
-Written in ErgoScript
+ErgoScript smart contracts written for the Ergo Names dapp.

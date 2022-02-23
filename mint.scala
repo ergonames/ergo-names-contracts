@@ -1,6 +1,5 @@
 object ErgoNamesMintingContract {
 
-  def getScript: String = {
     val script: String = s"""
       {
         // 2% per EIP24 standard format; could potentially be a data input
@@ -75,5 +74,4 @@ object ErgoNamesMintingContract {
       }
       """.stripMargin
 
-  }
 }
